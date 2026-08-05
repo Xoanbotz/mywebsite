@@ -1,117 +1,236 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard • Dildawg</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="assets/favicon.ico" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azazil Crypt • Encrypt & Decrypt File</title>
+    
+    <!-- SEO Meta -->
+    <meta name="description" content="Encrypt & decrypt file securely in your browser using AES-256-GCM. No upload to server, 100% client-side.">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Favicon (base64 inline) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔐%3C/text%3E%3C/svg%3E">
 </head>
 <body>
+    <!-- ========== TOAST CONTAINER ========== -->
+    <div id="toastContainer" class="toast-container"></div>
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar" id="sidebar">
-        <button class="close-btn" id="closeSidebar">✕</button>
-        <img src="assets/profile.jpg" alt="Foto" class="sidebar-img" />
-        <h3>Dildawg</h3>
-        <p>Pelajar PPLG</p>
-        <hr />
-        <nav>
-            <a href="#home">🏠 Beranda</a>
-            <a href="#todo">📚 To-Do</a>
-            <a href="#notes">📝 Catatan</a>
-            <a href="#progress">📊 Progress</a>
-            <a href="#calendar">📅 Kalender</a>
-            <a href="#stats">📈 Statistik</a>
-            <a href="#music">🎵 Musik</a>
-        </nav>
-        <button class="theme-btn" id="themeToggle">🌙</button>
-    </aside>
-
-    <!-- ===== MAIN ===== -->
-    <main class="main-content" id="mainContent">
-
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <button class="hamburger" id="openSidebar">☰</button>
-            <h1>Dashboard</h1>
-            <input type="text" id="searchBar" placeholder="🔍 Cari..." />
+    <!-- ========== MAIN WRAPPER ========== -->
+    <div class="app-wrapper">
+        
+        <!-- ===== HEADER ===== -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-icon">🔐</span>
+                    <span class="logo-text">Azazil<span class="logo-highlight">Crypt</span></span>
+                </div>
+                <span class="version-badge">v2.0</span>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+            </div>
         </header>
 
-        <!-- GREETING -->
-        <section class="greeting-card" id="home">
-            <img src="assets/profile.jpg" alt="Foto" class="greeting-img" />
-            <div>
-                <h1 id="greeting">Selamat Pagi</h1>
-                <p id="clock">--:--:--</p>
-                <p id="date">--/--/----</p>
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="app-main">
+
+            <!-- ===== TAB NAVIGATION ===== -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="encrypt">
+                    <span class="tab-icon">🔒</span>
+                    <span class="tab-label">Encrypt</span>
+                </button>
+                <button class="tab-btn" data-tab="decrypt">
+                    <span class="tab-icon">🔓</span>
+                    <span class="tab-label">Decrypt</span>
+                </button>
             </div>
-        </section>
 
-        <!-- STATISTIK CEPAT -->
-        <section class="stats-grid" id="stats">
-            <div class="stat-card"><h3>📋 Total Tugas</h3><p id="totalTasks">0</p></div>
-            <div class="stat-card"><h3>✅ Selesai</h3><p id="doneTasks">0</p></div>
-            <div class="stat-card"><h3>⏳ Pending</h3><p id="pendingTasks">0</p></div>
-            <div class="stat-card"><h3>📝 Catatan</h3><p id="noteCount">0</p></div>
-        </section>
+            <!-- ===== ENCRYPT TAB ===== -->
+            <section id="tab-encrypt" class="tab-content active">
+                <div class="card glass-card">
+                    <h2 class="card-title">🔒 Encrypt File</h2>
+                    <p class="card-subtitle">Enkripsi file dengan AES-256-GCM. Semua proses di browser Anda.</p>
 
-        <!-- TO-DO -->
-        <section class="card" id="todo">
-            <h2>📚 To-Do List</h2>
-            <div class="todo-input">
-                <input id="taskInput" placeholder="Tambah tugas..." />
-                <button onclick="addTask()">Tambah</button>
-            </div>
-            <ul id="taskList"></ul>
-        </section>
+                    <!-- Drop Zone -->
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">📁</div>
+                            <p class="drop-text"><strong>Seret & Jatuhkan</strong> file di sini</p>
+                            <p class="drop-hint">atau klik untuk memilih file</p>
+                            <span class="drop-size-limit">Maks. 2GB</span>
+                        </div>
+                        <input type="file" id="fileInput" class="drop-input" hidden>
+                    </div>
 
-        <!-- CATATAN -->
-        <section class="card" id="notes">
-            <h2>📝 Catatan</h2>
-            <textarea id="note" placeholder="Tulis catatan..."></textarea>
-        </section>
+                    <!-- File Info -->
+                    <div class="file-info" id="fileInfo" style="display:none;">
+                        <div class="file-info-icon">📄</div>
+                        <div class="file-info-details">
+                            <p class="file-info-name" id="fileName">-</p>
+                            <p class="file-info-size" id="fileSize">-</p>
+                        </div>
+                        <button class="file-info-remove" id="removeFile">✕</button>
+                    </div>
 
-        <!-- PROGRESS -->
-        <section class="card" id="progress">
-            <h2>📊 Progress Harian</h2>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill">0%</div></div>
-            <p id="progressText">0% selesai</p>
-        </section>
+                    <!-- Password Section -->
+                    <div class="form-group">
+                        <label for="encPassword">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="encPassword" placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password">
+                            <button class="password-toggle" type="button" data-target="encPassword">👁️</button>
+                            <button class="password-copy" type="button" data-target="encPassword">📋</button>
+                        </div>
+                    </div>
 
-        <!-- KALENDER -->
-        <section class="card" id="calendar">
-            <h2>📅 Kalender</h2>
-            <div id="calendarGrid"></div>
-        </section>
+                    <div class="form-group">
+                        <label for="encConfirmPassword">Konfirmasi Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="encConfirmPassword" placeholder="Masukkan ulang password" minlength="8" autocomplete="new-password">
+                            <button class="password-toggle" type="button" data-target="encConfirmPassword">👁️</button>
+                        </div>
+                    </div>
 
-        <!-- CUACA + QUOTE -->
-        <section class="card" id="weather-quote">
-            <div class="flex-row">
-                <div><h2>🌦️ Cuaca</h2><p id="weatherText">Memuat...</p></div>
-                <div><h2>🎯 Quote</h2><blockquote id="quoteText">"..."</blockquote></div>
-            </div>
-        </section>
+                    <!-- Password Strength -->
+                    <div class="strength-container">
+                        <div class="strength-bar" id="strengthBar">
+                            <div class="strength-fill" id="strengthFill" style="width:0%;"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText">Kekuatan password</span>
+                    </div>
 
-        <!-- MUSIK -->
-        <section class="card" id="music">
-            <h2>🎵 Widget Musik</h2>
-            <p id="nowPlaying">🎶 Lofi Study Beats</p>
-            <div class="music-controls">
-                <button onclick="alert('▶️ Diputar!')">▶</button>
-                <button onclick="alert('⏸ Dijeda!')">⏸</button>
-                <button onclick="alert('⏭ Skip!')">⏭</button>
-            </div>
-        </section>
+                    <!-- Generate Password -->
+                    <div class="generate-password">
+                        <button class="btn-generate" id="generatePassword">🔑 Generate Password</button>
+                        <div class="generate-options">
+                            <button class="gen-opt active" data-len="16">16</button>
+                            <button class="gen-opt" data-len="24">24</button>
+                            <button class="gen-opt" data-len="32">32</button>
+                        </div>
+                    </div>
 
-        <!-- FOOTER -->
-        <footer>
-            <p>&copy; 2025 Dildawg • built with <i class="fas fa-heart" style="color:#e74c6f;"></i></p>
+                    <!-- Actions -->
+                    <div class="form-actions">
+                        <button class="btn-primary" id="encryptBtn" disabled>
+                            <span class="btn-icon">🔒</span>
+                            <span class="btn-text">Encrypt</span>
+                        </button>
+                        <button class="btn-secondary" id="resetEncrypt">↺ Reset</button>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="progress-container" id="encProgressContainer" style="display:none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="encProgressFill" style="width:0%;"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span id="encProgressText">0%</span>
+                            <span id="encProgressStatus">Memproses...</span>
+                        </div>
+                    </div>
+
+                    <!-- Result -->
+                    <div class="result-container" id="encResultContainer" style="display:none;">
+                        <div class="result-success">
+                            <span class="result-icon">✅</span>
+                            <div>
+                                <p class="result-title">Enkripsi Berhasil!</p>
+                                <p class="result-detail" id="encResultDetail">File siap diunduh</p>
+                            </div>
+                        </div>
+                        <button class="btn-download" id="downloadEncrypted">📥 Download .enc</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== DECRYPT TAB ===== -->
+            <section id="tab-decrypt" class="tab-content">
+                <div class="card glass-card">
+                    <h2 class="card-title">🔓 Decrypt File</h2>
+                    <p class="card-subtitle">Dekripsi file .enc yang telah dienkripsi dengan aplikasi ini.</p>
+
+                    <!-- Drop Zone Decrypt -->
+                    <div class="drop-zone" id="dropZoneDecrypt">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">📂</div>
+                            <p class="drop-text"><strong>Seret & Jatuhkan</strong> file .enc di sini</p>
+                            <p class="drop-hint">atau klik untuk memilih file</p>
+                        </div>
+                        <input type="file" id="fileInputDecrypt" class="drop-input" hidden accept=".enc">
+                    </div>
+
+                    <!-- File Info Decrypt -->
+                    <div class="file-info" id="fileInfoDecrypt" style="display:none;">
+                        <div class="file-info-icon">🔐</div>
+                        <div class="file-info-details">
+                            <p class="file-info-name" id="fileNameDecrypt">-</p>
+                            <p class="file-info-size" id="fileSizeDecrypt">-</p>
+                        </div>
+                        <button class="file-info-remove" id="removeFileDecrypt">✕</button>
+                    </div>
+
+                    <!-- Password Decrypt -->
+                    <div class="form-group">
+                        <label for="decPassword">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="decPassword" placeholder="Masukkan password enkripsi" minlength="8" autocomplete="current-password">
+                            <button class="password-toggle" type="button" data-target="decPassword">👁️</button>
+                        </div>
+                    </div>
+
+                    <!-- Actions Decrypt -->
+                    <div class="form-actions">
+                        <button class="btn-primary" id="decryptBtn" disabled>
+                            <span class="btn-icon">🔓</span>
+                            <span class="btn-text">Decrypt</span>
+                        </button>
+                        <button class="btn-secondary" id="resetDecrypt">↺ Reset</button>
+                    </div>
+
+                    <!-- Progress Decrypt -->
+                    <div class="progress-container" id="decProgressContainer" style="display:none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="decProgressFill" style="width:0%;"></div>
+                        </div>
+                        <div class="progress-info">
+                            <span id="decProgressText">0%</span>
+                            <span id="decProgressStatus">Memproses...</span>
+                        </div>
+                    </div>
+
+                    <!-- Result Decrypt -->
+                    <div class="result-container" id="decResultContainer" style="display:none;">
+                        <div class="result-success">
+                            <span class="result-icon">✅</span>
+                            <div>
+                                <p class="result-title">Dekripsi Berhasil!</p>
+                                <p class="result-detail" id="decResultDetail">File asli siap diunduh</p>
+                            </div>
+                        </div>
+                        <button class="btn-download" id="downloadDecrypted">📥 Download File</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="app-footer">
+            <p>🔐 All encryption happens locally in your browser. <span class="footer-highlight">No data is ever sent to any server.</span></p>
+            <p class="footer-sub">Azazil Crypt v2.0 • AES-256-GCM • PBKDF2 250.000 iterations</p>
         </footer>
 
-    </main>
+    </div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <script src="script.js"></script>
+    <!-- ========== JAVASCRIPT ========== -->
+    <script src="js/script.js" defer></script>
 </body>
 </html>
