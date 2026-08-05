@@ -1,219 +1,122 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
-html {
-    scroll-behavior: smooth;
+body{
+
+background:#0f172a;
+
+color:white;
+
+padding:20px;
+
 }
 
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #0b0d10;
-    color: #e8edf5;
-    line-height: 1.6;
+.container{
+
+display:grid;
+
+gap:20px;
+
+max-width:700px;
+
+margin:auto;
+
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px;
+.card{
+
+background:#1e293b;
+
+padding:20px;
+
+border-radius:20px;
+
+box-shadow:0 0 15px rgba(0,0,0,.3);
+
 }
 
-/* HERO */
-.hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: linear-gradient(145deg, #0e1219, #1a212c);
-    overflow: hidden;
+.profile{
+
+text-align:center;
+
 }
 
-.overlay {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 30% 40%, rgba(40, 80, 140, 0.15), transparent 70%);
-    pointer-events: none;
+.profile-img{
+
+width:120px;
+
+height:120px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:4px solid #38bdf8;
+
+margin-bottom:10px;
+
 }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 700px;
+input{
+
+width:100%;
+
+padding:12px;
+
+margin:10px 0;
+
+border:none;
+
+border-radius:10px;
+
 }
 
-.profile-img {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #2a405e;
-    box-shadow: 0 0 30px rgba(50, 120, 200, 0.3);
-    margin-bottom: 20px;
-    transition: transform 0.3s;
+button{
+
+padding:12px;
+
+width:100%;
+
+background:#38bdf8;
+
+border:none;
+
+border-radius:10px;
+
+font-weight:bold;
+
+cursor:pointer;
+
 }
 
-.profile-img:hover {
-    transform: scale(1.05);
+ul{
+
+margin-top:15px;
+
 }
 
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -1px;
+li{
+
+margin:10px 0;
+
 }
 
-.hero h1 span {
-    color: #6a9fd8;
-    border-bottom: 3px solid #3a6f9c;
-}
+textarea{
 
-.tagline {
-    font-size: 1.2rem;
-    color: #9ab0cc;
-    margin: 8px 0 16px;
-}
+width:100%;
 
-.deskripsi {
-    color: #b0c4db;
-    max-width: 500px;
-    margin: 0 auto 28px;
-    font-size: 1.05rem;
-}
+height:150px;
 
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    margin-bottom: 30px;
-}
+padding:10px;
 
-.social-icons a {
-    color: #b0c8e0;
-    font-size: 1.8rem;
-    transition: 0.2s;
-}
+border-radius:10px;
 
-.social-icons a:hover {
-    color: #6a9fd8;
-    transform: translateY(-4px);
-}
+border:none;
 
-.btn-primary {
-    display: inline-block;
-    background: #2a405e;
-    color: white;
-    padding: 14px 36px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    border: 1px solid #3f5f82;
-    transition: 0.2s;
-}
+resize:none;
 
-.btn-primary:hover {
-    background: #345a7a;
-    transform: scale(1.04);
-    box-shadow: 0 8px 25px rgba(50, 120, 200, 0.25);
-}
-
-/* ABOUT */
-.about {
-    padding: 80px 0;
-    background: #11161e;
-    border-top: 1px solid #1f2835;
-}
-
-.about h2 {
-    text-align: center;
-    font-size: 2.4rem;
-    margin-bottom: 48px;
-    color: #c8d8ec;
-    letter-spacing: -0.5px;
-}
-
-.about-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 30px;
-}
-
-.about-card {
-    background: #181f2a;
-    padding: 30px 20px;
-    border-radius: 28px;
-    text-align: center;
-    border: 1px solid #28323f;
-    transition: 0.2s;
-}
-
-.about-card:hover {
-    transform: translateY(-8px);
-    border-color: #3f5f82;
-    background: #1d2633;
-}
-
-.about-card i {
-    font-size: 2.6rem;
-    color: #6a9fd8;
-    margin-bottom: 12px;
-}
-
-.about-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 8px;
-    color: #d0def0;
-}
-
-.about-card p {
-    color: #8ea5bf;
-    font-size: 0.95rem;
-}
-
-.sosmed-link {
-    text-align: center;
-    margin-top: 48px;
-    font-size: 1.2rem;
-}
-
-.sosmed-link a {
-    color: #6a9fd8;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.sosmed-link a:hover {
-    text-decoration: underline;
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 28px 0;
-    background: #0a0d12;
-    color: #5f738b;
-    border-top: 1px solid #19212b;
-    font-size: 0.9rem;
-}
-
-footer i {
-    margin: 0 4px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-    .hero h1 {
-        font-size: 2.2rem;
-    }
-    .profile-img {
-        width: 110px;
-        height: 110px;
-    }
-    .about-grid {
-        grid-template-columns: 1fr;
-    }
 }

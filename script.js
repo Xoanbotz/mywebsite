@@ -1,36 +1,62 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('💻 web nya Fadil, santuy bro!');
+const greeting=document.getElementById("greeting");
+const clock=document.getElementById("clock");
 
-    // Smooth scroll buat link internal
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
+function updateClock(){
 
-    // Efek muncul perlahan buat kartu about
-    const cards = document.querySelectorAll('.about-card');
-    if (cards.length) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, 100 * index);
-                }
-            });
-        }, { threshold: 0.2 });
+const now=new Date();
 
-        cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-    }
+clock.innerHTML=now.toLocaleString();
+
+let h=now.getHours();
+
+if(h<12){
+
+greeting.innerHTML="Selamat Pagi";
+
+}else if(h<15){
+
+greeting.innerHTML="Selamat Siang";
+
+}else if(h<18){
+
+greeting.innerHTML="Selamat Sore";
+
+}else{
+
+greeting.innerHTML="Selamat Malam";
+
+}
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+function addTask(){
+
+const input=document.getElementById("taskInput");
+
+const list=document.getElementById("taskList");
+
+if(input.value=="") return;
+
+const li=document.createElement("li");
+
+li.textContent="✅ "+input.value;
+
+list.appendChild(li);
+
+input.value="";
+
+}
+
+const note=document.getElementById("note");
+
+note.value=localStorage.getItem("note")||"";
+
+note.addEventListener("input",()=>{
+
+localStorage.setItem("note",note.value);
+
 });
