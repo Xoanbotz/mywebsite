@@ -1,59 +1,125 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Pribadi</title>
-
-<link rel="stylesheet" href="style.css">
-<script defer src="script.js"></script>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Pribadi • Fadil</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/favicon.ico" />
 </head>
 <body>
 
-<div class="container">
-
-    <div class="card profile">
-
-        <img src="assets/profile.jpg" class="profile-img">
-
-        <h2>Dildawg</h2>
-
+    <!-- SIDEBAR (V2) -->
+    <div class="sidebar" id="sidebar">
+        <button id="closeSidebar" class="close-btn">✕</button>
+        <img src="assets/profile.jpg" alt="Foto" class="sidebar-img" />
+        <h3>Dildawg</h3>
         <p>Pelajar PPLG</p>
+        <hr />
+        <nav>
+            <a href="#home">🏠 Beranda</a>
+            <a href="#todo">📚 To-Do</a>
+            <a href="#notes">📝 Catatan</a>
+            <a href="#calendar">📅 Kalender</a>
+            <a href="#progress">📊 Progress</a>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="mainContent">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <button id="openSidebar" class="hamburger">☰</button>
+            <h1>Dashboard</h1>
+            <button id="themeToggle" class="theme-btn">🌙</button>
+        </div>
+
+        <!-- HERO / PROFIL -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <img src="assets/profile.jpg" alt="Foto Dildawg" class="profile-img" />
+                    <h1>Halo, saya <span>Dildawg</span></h1>
+                    <p class="tagline">🧑‍💻 Pelajar PPLG • Santuy Tapi Serius</p>
+                    <p class="deskripsi">
+                        Suka ngoding, desain, dan eksplorasi hal baru. Ini dashboard pribadi saya.
+                    </p>
+                    <div class="social-icons">
+                        <a href="https://instagram.com/fadilmuhamadh" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JAM & GREETING -->
+        <section class="card" id="greeting-section">
+            <h2>👋 Selamat Datang</h2>
+            <h1 id="greeting"></h1>
+            <p id="clock"></p>
+        </section>
+
+        <!-- TO-DO LIST -->
+        <section class="card" id="todo">
+            <h2>📚 To-Do List</h2>
+            <div class="todo-input">
+                <input id="taskInput" placeholder="Tambah tugas..." />
+                <button onclick="addTask()">Tambah</button>
+            </div>
+            <ul id="taskList"></ul>
+        </section>
+
+        <!-- CATATAN -->
+        <section class="card" id="notes">
+            <h2>📝 Catatan</h2>
+            <textarea id="note" placeholder="Tulis catatan..."></textarea>
+        </section>
+
+        <!-- PROGRESS BAR (V2) -->
+        <section class="card" id="progress">
+            <h2>📊 Progress Harian</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+            </div>
+            <p id="progressText">Target hari ini: 0% selesai</p>
+        </section>
+
+        <!-- KALENDER (V2) -->
+        <section class="card" id="calendar">
+            <h2>📅 Kalender</h2>
+            <div id="calendarGrid"></div>
+        </section>
+
+        <!-- CUACA (V2) -->
+        <section class="card" id="weather">
+            <h2>🌦️ Cuaca</h2>
+            <p id="weatherText">Memuat cuaca...</p>
+        </section>
+
+        <!-- QUOTE HARIAN (V2) -->
+        <section class="card" id="quote">
+            <h2>🎯 Quote Hari Ini</h2>
+            <blockquote id="quoteText">"Kesuksesan dimulai dari keberanian."</blockquote>
+        </section>
+
+        <!-- MUSIK WIDGET (V2) -->
+        <section class="card" id="music">
+            <h2>🎵 Musik</h2>
+            <p>🎶 Sekarang: Lofi Study Beats</p>
+            <button onclick="alert('🎵 Musik diputar!')">▶ Putar</button>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>&copy; 2025 Dildawg • dibikin sambil ngopi <i class="fas fa-heart" style="color:#e74c6f;"></i></p>
+        </footer>
 
     </div>
 
-    <div class="card">
-
-        <h2>👋 Selamat Datang</h2>
-
-        <h1 id="greeting"></h1>
-
-        <p id="clock"></p>
-
-    </div>
-
-    <div class="card">
-
-        <h2>📚 To Do</h2>
-
-        <input id="taskInput" placeholder="Tambah tugas...">
-
-        <button onclick="addTask()">Tambah</button>
-
-        <ul id="taskList"></ul>
-
-    </div>
-
-    <div class="card">
-
-        <h2>📝 Catatan</h2>
-
-        <textarea id="note" placeholder="Tulis catatan..."></textarea>
-
-    </div>
-
-</div>
-
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="script.js"></script>
 </body>
 </html>
