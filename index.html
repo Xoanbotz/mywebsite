@@ -3,440 +3,937 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AzazilCrypt v2.0 - Encrypt & Decrypt File</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/animation.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    
-    <!-- Favicon -->
+    <title>AzazilCrypt - Tools Suite</title>
+    <meta name="description" content="Koleksi tools online gratis & aman — Enkripsi, Dekripsi, dan berbagai utility lainnya.">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
-    <!-- Meta Description -->
-    <meta name="description" content="AzazilCrypt v2.0 - Encrypt & Decrypt File 100% offline menggunakan Web Crypto API">
-    <meta name="theme-color" content="#1a1a2e">
+    <style>
+        /* ========================================
+           ROOT VARIABLES
+           ======================================== */
+        :root {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            --bg-glass-hover: rgba(255, 255, 255, 0.35);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #8888aa;
+            --border-color: rgba(255, 255, 255, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.2);
+            --accent-primary: #6c5ce7;
+            --accent-secondary: #00b894;
+            --accent-danger: #e74c6f;
+            --gradient-main: linear-gradient(135deg, #6c5ce7 0%, #00b894 100%);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 50%;
+            --transition-fast: 150ms ease;
+            --transition-medium: 300ms ease;
+            --transition-slow: 500ms ease;
+            --shadow-sm: 0 2px 8px var(--shadow-color);
+            --shadow-md: 0 4px 16px var(--shadow-color);
+            --shadow-lg: 0 8px 32px var(--shadow-color);
+            --shadow-glow: 0 0 30px rgba(108, 92, 231, 0.3);
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-md: 16px;
+            --font-lg: 20px;
+            --font-xl: 24px;
+            --font-xxl: 32px;
+            --font-xxxl: 48px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #1a1a2e;
+            --bg-glass: rgba(26, 26, 46, 0.6);
+            --bg-glass-hover: rgba(26, 26, 46, 0.8);
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-muted: #6a6a8a;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-hover: rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 30px rgba(108, 92, 231, 0.15);
+        }
+
+        /* ========================================
+           RESET & BASE
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background var(--transition-medium), color var(--transition-medium);
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           SCROLLBAR
+           ======================================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a4bd1;
+        }
+
+        /* ========================================
+           NAVBAR
+           ======================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 14px 24px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--transition-medium);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .navbar-brand .logo-icon {
+            font-size: 28px;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand .brand-version {
+            font-size: var(--font-xs);
+            color: var(--text-muted);
+            background: var(--bg-glass);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            -webkit-text-fill-color: var(--text-muted);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 8px 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-glass-hover);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle .toggle-label {
+            font-size: var(--font-xs);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            padding: 130px 24px 40px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent-primary);
+            padding: 4px 16px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-xs);
+            font-weight: 500;
+            margin-bottom: 16px;
+            border: 1px solid rgba(108, 92, 231, 0.2);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: var(--font-xxxl);
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 .highlight {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: var(--font-lg);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* ========================================
+           SEARCH
+           ======================================== */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 0.6s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 4px 4px 4px 20px;
+            transition: all var(--transition-medium);
+            backdrop-filter: blur(8px);
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+            transform: scale(1.02);
+        }
+
+        .search-box .search-icon {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            font-size: var(--font-md);
+            color: var(--text-primary);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box .search-clear {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px 12px;
+            font-size: 16px;
+            display: none;
+            transition: color var(--transition-fast);
+        }
+
+        .search-box .search-clear:hover {
+            color: var(--text-primary);
+        }
+
+        .search-box .search-clear.visible {
+            display: block;
+        }
+
+        /* ========================================
+           TOOLS GRID
+           ======================================== */
+        .tools-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .tools-section .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tools-section .section-header h2 {
+            font-size: var(--font-xl);
+            font-weight: 700;
+        }
+
+        .tools-section .section-header .tool-count {
+            font-size: var(--font-sm);
+            color: var(--text-muted);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all var(--transition-medium);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-lg);
+            background: var(--bg-glass-hover);
+        }
+
+        .tool-card:active {
+            transform: scale(0.97);
+        }
+
+        .tool-card .card-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .tool-card .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-card .card-badge.live {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--accent-secondary);
+        }
+
+        .tool-card .card-badge.coming {
+            background: rgba(253, 203, 110, 0.2);
+            color: #fdcb6e;
+        }
+
+        .tool-card .card-badge.beta {
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--accent-primary);
+        }
+
+        .tool-card h3 {
+            font-size: var(--font-lg);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .tool-card p {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tool-card .card-footer {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--font-xs);
+            color: var(--text-muted);
+        }
+
+        .tool-card .card-footer .arrow {
+            transition: transform var(--transition-fast);
+        }
+
+        .tool-card:hover .card-footer .arrow {
+            transform: translateX(4px);
+        }
+
+        .tool-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .tool-card.coming-soon:hover {
+            transform: none;
+            border-color: var(--border-color);
+            box-shadow: none;
+        }
+
+        /* ========================================
+           NO RESULTS
+           ======================================== */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .no-results.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .no-results .no-results-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .no-results h3 {
+            font-size: var(--font-lg);
+            margin-bottom: 4px;
+        }
+
+        .no-results p {
+            font-size: var(--font-sm);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px 24px;
+            text-align: center;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+        }
+
+        .footer .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer .footer-brand {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer .footer-text {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .footer .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer .footer-social a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--font-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .footer .footer-social a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer .footer-divider {
+            width: 60px;
+            height: 2px;
+            background: var(--gradient-main);
+            margin: 12px auto;
+            border-radius: var(--radius-full);
+        }
+
+        .footer .footer-copy {
+            font-size: var(--font-xs);
+            color: var(--text-muted);
+        }
+
+        .footer .footer-copy .heart {
+            color: var(--accent-danger);
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        .tool-card:nth-child(1) { animation-delay: 0.05s; }
+        .tool-card:nth-child(2) { animation-delay: 0.1s; }
+        .tool-card:nth-child(3) { animation-delay: 0.15s; }
+        .tool-card:nth-child(4) { animation-delay: 0.2s; }
+        .tool-card:nth-child(5) { animation-delay: 0.25s; }
+        .tool-card:nth-child(6) { animation-delay: 0.3s; }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: var(--font-xxl);
+            }
+            .hero p {
+                font-size: var(--font-md);
+            }
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 16px;
+            }
+            .navbar {
+                padding: 12px 16px;
+            }
+            .navbar-brand .brand-text {
+                font-size: var(--font-md);
+            }
+            .theme-toggle .toggle-label {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 110px 16px 30px;
+            }
+            .hero h1 {
+                font-size: var(--font-xl);
+            }
+            .hero p {
+                font-size: var(--font-sm);
+            }
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .tool-card {
+                padding: 20px 16px;
+            }
+            .tool-card .card-icon {
+                font-size: 28px;
+            }
+            .tool-card h3 {
+                font-size: var(--font-md);
+            }
+            .search-box {
+                padding: 2px 2px 2px 16px;
+            }
+            .search-box input {
+                padding: 10px 0;
+                font-size: var(--font-sm);
+            }
+            .footer {
+                padding: 24px 16px;
+            }
+            .footer .footer-social {
+                gap: 12px;
+            }
+            .footer .footer-social a {
+                font-size: var(--font-xs);
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: var(--font-lg);
+            }
+            .navbar-brand .brand-text {
+                font-size: var(--font-sm);
+            }
+            .navbar-brand .logo-icon {
+                font-size: 22px;
+            }
+            .theme-toggle {
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main Navigation">
-        <div class="sidebar-header">
-            <div class="logo-container">
-                <img src="assets/icons/logo.svg" alt="AzazilCrypt Logo" class="logo-icon" width="40" height="40">
-                <span class="logo-text">AzazilCrypt</span>
-                <span class="logo-version">v2.0</span>
-            </div>
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12h18M3 6h18M3 18h18"/>
-                </svg>
+
+    <!-- ========================================
+    NAVBAR
+    ======================================== -->
+    <nav class="navbar" role="navigation">
+        <a href="/" class="navbar-brand">
+            <span class="logo-icon">🔐</span>
+            <span class="brand-text">AzazilCrypt</span>
+            <span class="brand-version">v2.0</span>
+        </a>
+        <div class="navbar-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span id="themeIcon">🌙</span>
+                <span class="toggle-label" id="themeLabel">Dark</span>
             </button>
         </div>
-        
-        <nav class="sidebar-nav">
-            <ul>
-                <li>
-                    <a href="#dashboard" class="nav-link active" data-page="dashboard">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/>
-                            <rect x="14" y="3" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/>
-                            <rect x="14" y="14" width="7" height="7"/>
-                        </svg>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#encrypt" class="nav-link" data-page="encrypt">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        <span>Encrypt</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#decrypt" class="nav-link" data-page="decrypt">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                            <path d="M12 15v3"/>
-                        </svg>
-                        <span>Decrypt</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#history" class="nav-link" data-page="history">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        <span>History</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-                <span>Toggle Theme</span>
-            </button>
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Offline</span>
+    </nav>
+
+    <!-- ========================================
+    HERO
+    ======================================== -->
+    <section class="hero">
+        <div class="badge">🚀 100% Offline • Web Crypto API</div>
+        <h1>
+            Koleksi <span class="highlight">Tools</span><br>
+            Gratis & Aman
+        </h1>
+        <p>
+            Berbagai utility online yang berjalan sepenuhnya di browser Anda.
+            Tanpa server, tanpa tracking, tanpa biaya.
+        </p>
+
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Cari tools..." aria-label="Cari tools">
+                <button class="search-clear" id="searchClear" aria-label="Hapus pencarian">✕</button>
             </div>
         </div>
-    </aside>
+    </section>
 
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-        <!-- Dashboard Page -->
-        <section id="dashboard" class="page active">
-            <div class="page-header">
-                <h1>Dashboard</h1>
-                <p class="subtitle">AzazilCrypt v2.0 - Enkripsi & Dekripsi File Offline</p>
-            </div>
-            
-            <div class="dashboard-grid">
-                <div class="stat-card glass">
-                    <div class="stat-icon encrypt-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Enkripsi</h3>
-                        <p class="stat-number" id="encryptCount">0</p>
-                        <p class="stat-label">File terenkripsi</p>
-                    </div>
-                </div>
-                
-                <div class="stat-card glass">
-                    <div class="stat-icon decrypt-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                            <path d="M12 15v3"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Dekripsi</h3>
-                        <p class="stat-number" id="decryptCount">0</p>
-                        <p class="stat-label">File didekripsi</p>
-                    </div>
-                </div>
-                
-                <div class="stat-card glass">
-                    <div class="stat-icon security-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            <path d="M12 8v4"/>
-                            <path d="M12 16h.01"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Keamanan</h3>
-                        <p class="stat-number">AES-256</p>
-                        <p class="stat-label">GCM + PBKDF2</p>
-                    </div>
-                </div>
-                
-                <div class="stat-card glass">
-                    <div class="stat-icon session-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <h3>Sesi</h3>
-                        <p class="stat-number" id="sessionTime">0m</p>
-                        <p class="stat-label">Waktu aktif</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="quick-actions glass">
-                <h2>Mulai Cepat</h2>
-                <div class="action-buttons">
-                    <button class="btn-primary" id="quickEncrypt">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        Encrypt File
-                    </button>
-                    <button class="btn-secondary" id="quickDecrypt">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                            <path d="M12 15v3"/>
-                        </svg>
-                        Decrypt File
-                    </button>
-                </div>
-            </div>
-            
-            <div class="recent-activity glass">
-                <h2>Aktivitas Terbaru</h2>
-                <div class="activity-list" id="recentActivity">
-                    <p class="empty-state">Belum ada aktivitas</p>
-                </div>
-            </div>
-        </section>
+    <!-- ========================================
+    TOOLS GRID
+    ======================================== -->
+    <section class="tools-section">
+        <div class="section-header">
+            <h2>📦 Semua Tools</h2>
+            <span class="tool-count" id="toolCount">0 tools</span>
+        </div>
 
-        <!-- Encrypt Page -->
-        <section id="encrypt" class="page">
-            <div class="page-header">
-                <h1>Encrypt File</h1>
-                <p class="subtitle">Enkripsi file dengan AES-256-GCM</p>
-            </div>
-            
-            <div class="encrypt-container">
-                <!-- Upload Area -->
-                <div class="upload-area glass" id="encryptDropZone">
-                    <input type="file" id="encryptFileInput" hidden>
-                    <div class="upload-content">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <h3>Seret & Lepas File di Sini</h3>
-                        <p>atau klik untuk memilih file</p>
-                        <span class="file-types">Mendukung semua jenis file</span>
-                    </div>
-                </div>
-                
-                <!-- File Info -->
-                <div class="file-info glass" id="encryptFileInfo" style="display: none;">
-                    <div class="file-details">
-                        <div class="file-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                            </svg>
-                        </div>
-                        <div class="file-meta">
-                            <p class="file-name" id="encryptFileName">nama_file.txt</p>
-                            <p class="file-size" id="encryptFileSize">0 KB</p>
-                            <p class="file-type" id="encryptFileType">Tipe: text/plain</p>
-                        </div>
-                        <button class="btn-remove" id="encryptRemoveFile" aria-label="Remove file">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Password Section -->
-                <div class="password-section glass">
-                    <div class="password-input-group">
-                        <label for="encryptPassword">Password</label>
-                        <div class="password-field">
-                            <input type="password" id="encryptPassword" placeholder="Masukkan password (min. 8 karakter)" minlength="8">
-                            <button class="btn-toggle-password" data-target="encryptPassword" aria-label="Toggle password visibility">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="password-strength">
-                        <div class="strength-bar">
-                            <div class="strength-fill" id="encryptStrengthFill" style="width: 0%"></div>
-                        </div>
-                        <span class="strength-text" id="encryptStrengthText">Kosong</span>
-                    </div>
-                    
-                    <div class="password-actions">
-                        <button class="btn-generate" id="encryptGeneratePassword">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 2l-8 8M16 2h5v5M21 10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8"/>
-                            </svg>
-                            Generate Password
-                        </button>
-                        <div class="password-length-options">
-                            <button class="length-btn active" data-length="16">16</button>
-                            <button class="length-btn" data-length="24">24</button>
-                            <button class="length-btn" data-length="32">32</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Progress -->
-                <div class="progress-section glass" id="encryptProgress" style="display: none;">
-                    <div class="progress-header">
-                        <span class="progress-label">Encrypting...</span>
-                        <span class="progress-percent" id="encryptPercent">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="encryptProgressFill" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-details">
-                        <span id="encryptSpeed">0 MB/s</span>
-                        <span id="encryptETA">Estimasi: --</span>
-                    </div>
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="action-buttons encrypt-actions">
-                    <button class="btn-primary btn-encrypt" id="encryptButton" disabled>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        Encrypt File
-                    </button>
-                </div>
-            </div>
-        </section>
+        <div class="tools-grid" id="toolsGrid">
+            <!-- Tools akan di-render oleh JavaScript -->
+        </div>
 
-        <!-- Decrypt Page -->
-        <section id="decrypt" class="page">
-            <div class="page-header">
-                <h1>Decrypt File</h1>
-                <p class="subtitle">Dekripsi file dengan AES-256-GCM</p>
-            </div>
-            
-            <div class="decrypt-container">
-                <!-- Upload Area -->
-                <div class="upload-area glass" id="decryptDropZone">
-                    <input type="file" id="decryptFileInput" hidden>
-                    <div class="upload-content">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <h3>Seret & Lepas File .enc di Sini</h3>
-                        <p>atau klik untuk memilih file</p>
-                        <span class="file-types">Hanya file dengan ekstensi .enc</span>
-                    </div>
-                </div>
-                
-                <!-- File Info -->
-                <div class="file-info glass" id="decryptFileInfo" style="display: none;">
-                    <div class="file-details">
-                        <div class="file-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                            </svg>
-                        </div>
-                        <div class="file-meta">
-                            <p class="file-name" id="decryptFileName">file.enc</p>
-                            <p class="file-size" id="decryptFileSize">0 KB</p>
-                            <p class="file-type" id="decryptFileType">Tipe: application/octet-stream</p>
-                        </div>
-                        <button class="btn-remove" id="decryptRemoveFile" aria-label="Remove file">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Password Section -->
-                <div class="password-section glass">
-                    <div class="password-input-group">
-                        <label for="decryptPassword">Password</label>
-                        <div class="password-field">
-                            <input type="password" id="decryptPassword" placeholder="Masukkan password" minlength="8">
-                            <button class="btn-toggle-password" data-target="decryptPassword" aria-label="Toggle password visibility">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="password-strength">
-                        <div class="strength-bar">
-                            <div class="strength-fill" id="decryptStrengthFill" style="width: 0%"></div>
-                        </div>
-                        <span class="strength-text" id="decryptStrengthText">Kosong</span>
-                    </div>
-                </div>
-                
-                <!-- Progress -->
-                <div class="progress-section glass" id="decryptProgress" style="display: none;">
-                    <div class="progress-header">
-                        <span class="progress-label">Decrypting...</span>
-                        <span class="progress-percent" id="decryptPercent">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="decryptProgressFill" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-details">
-                        <span id="decryptSpeed">0 MB/s</span>
-                        <span id="decryptETA">Estimasi: --</span>
-                    </div>
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="action-buttons decrypt-actions">
-                    <button class="btn-primary btn-decrypt" id="decryptButton" disabled>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                            <path d="M12 15v3"/>
-                        </svg>
-                        Decrypt File
-                    </button>
-                </div>
-            </div>
-        </section>
+        <div class="no-results" id="noResults">
+            <div class="no-results-icon">🔍</div>
+            <h3>Tidak ditemukan</h3>
+            <p>Coba gunakan kata kunci lain</p>
+        </div>
+    </section>
 
-        <!-- History Page -->
-        <section id="history" class="page">
-            <div class="page-header">
-                <h1>History</h1>
-                <p class="subtitle">Riwayat aktivitas enkripsi dan dekripsi</p>
-                <button class="btn-clear-history" id="clearHistory">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                    Hapus Semua
-                </button>
+    <!-- ========================================
+    FOOTER
+    ======================================== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">AzazilCrypt</div>
+            <div class="footer-text">Tools Suite — Enkripsi & Dekripsi File Offline</div>
+            <div class="footer-divider"></div>
+            <div class="footer-social">
+                <a href="https://instagram.com/fadilmuhamadh" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://whatsapp.com/channel/0029Vb87FVfInlqRtOkpBJ1w" target="_blank" rel="noopener">WhatsApp Channel</a>
+                <a href="https://github.com/Xoanbotz" target="_blank" rel="noopener">GitHub</a>
             </div>
-            
-            <div class="history-container glass">
-                <div class="history-filters">
-                    <button class="filter-btn active" data-filter="all">Semua</button>
-                    <button class="filter-btn" data-filter="encrypt">Encrypt</button>
-                    <button class="filter-btn" data-filter="decrypt">Decrypt</button>
-                </div>
-                
-                <div class="history-list" id="historyList">
-                    <p class="empty-state">Belum ada riwayat aktivitas</p>
-                </div>
+            <div class="footer-copy">
+                Dibuat dengan <span class="heart">❤️</span> oleh <strong>Azazil</strong> &bull;
+                <span id="year"></span> AzazilCrypt
             </div>
-        </section>
-    </main>
+        </div>
+    </footer>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="toast-container" role="alert" aria-live="polite"></div>
+    <!-- ========================================
+    JAVASCRIPT
+    ======================================== -->
+    <script>
+        // ========================================
+        // DATA TOOLS - Tambah tool baru di sini!
+        // ========================================
+        const toolsData = [{
+            id: 'encryptdecrypt',
+            name: 'Encrypt & Decrypt',
+            icon: '🔐',
+            description: 'Enkripsi & dekripsi file dengan AES-256-GCM. 100% offline menggunakan Web Crypto API.',
+            category: 'security',
+            url: 'tools/encryptdecrypt/', // ← PATH YANG BENAR
+            status: 'live',
+            tags: ['enkripsi', 'dekripsi', 'keamanan', 'file', 'aes', 'gcm']
+        }, {
+            id: 'qr-generator',
+            name: 'QR Generator',
+            icon: '📱',
+            description: 'Buat QR Code dari teks, link, atau data lainnya dengan cepat.',
+            category: 'utility',
+            url: '#',
+            status: 'coming',
+            tags: ['qr', 'code', 'barcode', 'scan']
+        }, {
+            id: 'password-generator',
+            name: 'Password Generator',
+            icon: '🔑',
+            description: 'Hasilkan password kuat secara acak dengan berbagai opsi panjang dan karakter.',
+            category: 'security',
+            url: '#',
+            status: 'coming',
+            tags: ['password', 'random', 'keamanan', 'acak']
+        }, {
+            id: 'pdf-tools',
+            name: 'PDF Tools',
+            icon: '📄',
+            description: 'Compress, merge, split, dan konversi file PDF dengan mudah.',
+            category: 'document',
+            url: '#',
+            status: 'coming',
+            tags: ['pdf', 'compress', 'merge', 'split', 'convert']
+        }, {
+            id: 'image-compressor',
+            name: 'Image Compressor',
+            icon: '🖼️',
+            description: 'Kompres gambar tanpa mengurangi kualitas secara signifikan.',
+            category: 'image',
+            url: '#',
+            status: 'coming',
+            tags: ['image', 'compress', 'resize', 'jpg', 'png']
+        }, {
+            id: 'hash-generator',
+            name: 'Hash Generator',
+            icon: '🔢',
+            description: 'Generate hash MD5, SHA-1, SHA-256, dan SHA-512 dari teks atau file.',
+            category: 'security',
+            url: '#',
+            status: 'coming',
+            tags: ['hash', 'md5', 'sha1', 'sha256', 'sha512']
+        }];
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Memproses...</p>
-    </div>
+        // ========================================
+        // RENDER TOOLS
+        // ========================================
+        function renderTools(filter = '') {
+            const grid = document.getElementById('toolsGrid');
+            const noResults = document.getElementById('noResults');
+            const toolCount = document.getElementById('toolCount');
 
-    <!-- JavaScript -->
-    <script type="module" src="js/app.js"></script>
+            const query = filter.toLowerCase().trim();
+            let filtered = toolsData;
+
+            if (query) {
+                filtered = toolsData.filter(tool => {
+                    const searchable = [
+                        tool.name,
+                        tool.description,
+                        tool.category,
+                        ...(tool.tags || [])
+                    ].join(' ').toLowerCase();
+                    return searchable.includes(query);
+                });
+            }
+
+            toolCount.textContent = `${filtered.length} tools`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.add('visible');
+                return;
+            }
+
+            noResults.classList.remove('visible');
+
+            grid.innerHTML = filtered.map(tool => {
+                const statusBadge = {
+                    live: '<span class="card-badge live">● Live</span>',
+                    coming: '<span class="card-badge coming">● Coming Soon</span>',
+                    beta: '<span class="card-badge beta">● Beta</span>'
+                } [tool.status] || '';
+
+                const isClickable = tool.status === 'live';
+                const comingClass = !isClickable ? 'coming-soon' : '';
+                const href = isClickable ? tool.url : '#';
+
+                return `
+                        <a href="${href}" class="tool-card ${comingClass}" 
+                           ${!isClickable ? 'onclick="return false;"' : ''}
+                           data-tool="${tool.id}">
+                            ${statusBadge}
+                            <div class="card-icon">${tool.icon}</div>
+                            <h3>${tool.name}</h3>
+                            <p>${tool.description}</p>
+                            <div class="card-footer">
+                                ${isClickable ? 'Buka tool' : 'Segera hadir'}
+                                <span class="arrow">${isClickable ? '→' : '⏳'}</span>
+                            </div>
+                        </a>
+                    `;
+            }).join('');
+        }
+
+        // ========================================
+        // SEARCH
+        // ========================================
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+
+        searchInput.addEventListener('input', function() {
+            const value = this.value;
+            searchClear.classList.toggle('visible', value.length > 0);
+            renderTools(value);
+        });
+
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            renderTools('');
+            searchInput.focus();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === 'Escape') {
+                searchInput.blur();
+            }
+        });
+
+        // ========================================
+        // THEME
+        // ========================================
+        function getTheme() {
+            return localStorage.getItem('azazil-theme') || 'dark';
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('azazil-theme', theme);
+            updateThemeButton(theme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            if (theme === 'dark') {
+                icon.textContent = '☀️';
+                label.textContent = 'Light';
+            } else {
+                icon.textContent = '🌙';
+                label.textContent = 'Dark';
+            }
+        }
+
+        function toggleTheme() {
+            const current = getTheme();
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        const savedTheme = getTheme();
+        setTheme(savedTheme);
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // ========================================
+        // INIT
+        // ========================================
+        renderTools();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        console.log('🔐 AzazilCrypt v2.0 — Tools Suite');
+        console.log('💡 Shortcut: Ctrl+K untuk mencari');
+        console.log('📦 Total tools:', toolsData.length);
+        console.log('✅ Encrypt & Decrypt → tools/encryptdecrypt/');
+    </script>
+
 </body>
 </html>
