@@ -3,86 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AzazilCrypt - Tools Suite</title>
+    <title>SimpleThing - Tools Suite</title>
     <meta name="description" content="Koleksi tools online gratis & aman — Enkripsi, Dekripsi, dan berbagai utility lainnya.">
+    <meta name="theme-color" content="#ffffff">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
     <style>
         /* ==========================================================================
-           AzazilCrypt v2.0 - Landing Page & Tools Suite Stylesheet
-           Theme: Modern Tactical Dark / Security Native
+           SimpleThing v1.0 — Simple White & Blue
            ========================================================================== */
 
-        /* --------------------------------------------------------------------------
-           1. ROOT VARIABLES (Light & Dark Theme System)
-           -------------------------------------------------------------------------- */
         :root {
-            /* Dark Theme Palette (Default) */
-            --bg-primary: #0e1117;
-            --bg-secondary: #161b22;
-            --bg-glass: rgba(22, 27, 34, 0.75);
-            --bg-glass-hover: rgba(33, 38, 45, 0.85);
-            
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            
-            --border-color: #30363d;
-            --border-focus: #58a6ff;
-            
-            --accent-primary: #238636;
-            --accent-primary-hover: #2ea043;
-            --accent-secondary: #1f6feb;
-            --accent-danger: #da3633;
-            
-            --gradient-main: linear-gradient(135deg, #238636 0%, #1f6feb 100%);
-            
-            /* Layout & Elevations */
-            --radius-sm: 6px;
-            --radius-md: 10px;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f9ff;
+            --bg-hover: #e8f2ff;
+
+            --text-primary: #003d80;
+            --text-secondary: #4a7ab0;
+            --text-muted: #8aa8c8;
+
+            --border-color: #cce0f5;
+
+            --accent: #0071e3;
+            --accent-hover: #005bb8;
+            --accent-light: #e8f2ff;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
             --radius-lg: 16px;
             --radius-full: 9999px;
-            
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-medium: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-            
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 24px rgba(35, 134, 54, 0.25);
-            
-            /* Typography Scale */
+
+            --transition: 200ms ease;
+
             --font-xs: 12px;
             --font-sm: 14px;
             --font-md: 16px;
             --font-lg: 20px;
             --font-xl: 24px;
             --font-xxl: 32px;
-            --font-xxxl: 48px;
+            --font-xxxl: 44px;
         }
 
-        [data-theme="light"] {
-            --bg-primary: #f6f8fa;
-            --bg-secondary: #ffffff;
-            --bg-glass: rgba(255, 255, 255, 0.85);
-            --bg-glass-hover: rgba(240, 242, 245, 0.95);
-            
-            --text-primary: #1f2328;
-            --text-secondary: #656d76;
-            --text-muted: #8c959f;
-            
-            --border-color: #d0d7de;
-            --border-focus: #0969da;
-            
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-            --shadow-glow: 0 0 24px rgba(35, 134, 54, 0.15);
-        }
-
-        /* --------------------------------------------------------------------------
-           2. RESET & BASE STYLES
-           -------------------------------------------------------------------------- */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -99,29 +60,10 @@
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.5;
-            transition: background-color var(--transition-medium), color var(--transition-medium);
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: var(--radius-full);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-
-        /* --------------------------------------------------------------------------
-           3. NAVIGATION BAR
-           -------------------------------------------------------------------------- */
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -129,14 +71,11 @@
             right: 0;
             z-index: 1000;
             padding: 16px 32px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--bg-primary);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: border-color var(--transition-medium);
         }
 
         .navbar-brand {
@@ -146,142 +85,82 @@
             text-decoration: none;
         }
 
-        .navbar-brand .logo-icon {
-            font-size: 24px;
-        }
-
-        .navbar-brand .brand-text {
+        .brand-text {
             font-size: var(--font-lg);
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--accent);
             letter-spacing: -0.5px;
         }
 
-        .navbar-brand .brand-version {
+        .brand-version {
             font-size: var(--font-xs);
-            font-family: "SFMono-Regular", Consolas, monospace;
-            color: var(--accent-primary);
-            background: rgba(35, 134, 54, 0.15);
-            border: 1px solid rgba(35, 134, 54, 0.3);
+            color: var(--accent);
+            background: var(--accent-light);
+            border: 1px solid var(--border-color);
             padding: 2px 8px;
             border-radius: var(--radius-full);
         }
 
-        .navbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-full);
-            padding: 8px 16px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: var(--font-sm);
-            transition: all var(--transition-fast);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .theme-toggle:hover {
-            color: var(--text-primary);
-            border-color: var(--text-muted);
-            transform: translateY(-1px);
-        }
-
-        .theme-toggle .toggle-label {
-            font-size: var(--font-xs);
-            font-weight: 500;
-        }
-
-        /* --------------------------------------------------------------------------
-           4. HERO SECTION
-           -------------------------------------------------------------------------- */
+        /* Hero */
         .hero {
-            padding: 150px 24px 40px;
+            padding: 140px 24px 40px;
             text-align: center;
-            max-width: 840px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .hero .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
             padding: 6px 16px;
             border-radius: var(--radius-full);
             font-size: var(--font-xs);
-            font-family: "SFMono-Regular", Consolas, monospace;
             font-weight: 500;
             margin-bottom: 24px;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .hero h1 {
             font-size: var(--font-xxxl);
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: -1.2px;
             margin-bottom: 20px;
             line-height: 1.15;
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-            opacity: 0;
+            color: var(--text-primary);
         }
 
         .hero h1 .highlight {
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent);
         }
 
         .hero p {
             font-size: var(--font-lg);
             color: var(--text-secondary);
-            max-width: 620px;
+            max-width: 600px;
             margin: 0 auto 36px;
             line-height: 1.6;
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-            opacity: 0;
         }
 
-        /* --------------------------------------------------------------------------
-           5. SEARCH BAR
-           -------------------------------------------------------------------------- */
+        /* Search */
         .search-container {
             max-width: 480px;
             margin: 0 auto;
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-            opacity: 0;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-full);
             padding: 6px 8px 6px 20px;
-            transition: all var(--transition-fast);
-            box-shadow: var(--shadow-sm);
+            transition: border-color var(--transition), box-shadow var(--transition);
         }
 
         .search-box:focus-within {
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
-        }
-
-        .search-box .search-icon {
-            color: var(--text-muted);
-            font-size: 16px;
-            margin-right: 12px;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
         }
 
         .search-box input {
@@ -292,16 +171,17 @@
             padding: 8px 0;
             font-size: var(--font-md);
             color: var(--text-primary);
+            font-family: inherit;
         }
 
         .search-box input::placeholder {
             color: var(--text-muted);
         }
 
-        .search-box .search-clear {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
+        .search-clear {
+            background: var(--accent-light);
+            border: none;
+            color: var(--accent);
             border-radius: var(--radius-full);
             width: 28px;
             height: 28px;
@@ -310,50 +190,46 @@
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            transition: all var(--transition-fast);
+            transition: background-color var(--transition);
         }
 
-        .search-box .search-clear:hover {
-            color: var(--text-primary);
-            border-color: var(--text-muted);
+        .search-clear:hover {
+            background: var(--border-color);
         }
 
-        .search-box .search-clear.visible {
+        .search-clear.visible {
             display: flex;
         }
 
-        /* --------------------------------------------------------------------------
-           6. TOOLS SECTION & CARDS
-           -------------------------------------------------------------------------- */
+        /* Tools */
         .tools-section {
             max-width: 1100px;
             margin: 0 auto;
             padding: 40px 24px 80px;
         }
 
-        .tools-section .section-header {
+        .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .tools-section .section-header h2 {
+        .section-header h2 {
             font-size: var(--font-xl);
-            font-weight: 700;
+            font-weight: 600;
+            color: var(--text-primary);
             letter-spacing: -0.5px;
         }
 
-        .tools-section .section-header .tool-count {
+        .tool-count {
             font-size: var(--font-xs);
-            font-family: "SFMono-Regular", Consolas, monospace;
-            color: var(--text-muted);
-            background: var(--bg-secondary);
+            color: var(--accent);
+            background: var(--accent-light);
             padding: 4px 12px;
             border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
         }
 
         .tools-grid {
@@ -363,75 +239,63 @@
         }
 
         .tool-card {
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 24px;
             text-decoration: none;
             color: var(--text-primary);
-            transition: all var(--transition-fast);
+            transition: all var(--transition);
             position: relative;
             display: flex;
             flex-direction: column;
-            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .tool-card:hover {
-            border-color: var(--border-focus);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            background: var(--bg-secondary);
         }
 
-        .tool-card:active {
-            transform: scale(0.98);
-        }
-
-        .tool-card .card-icon {
-            font-size: 32px;
+        .card-icon {
+            font-size: 16px;
+            font-weight: 700;
             margin-bottom: 16px;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-primary);
+            background: var(--accent-light);
             border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
+            color: var(--accent);
         }
 
-        .tool-card .card-badge {
+        .card-badge {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 11px;
-            font-family: "SFMono-Regular", Consolas, monospace;
             font-weight: 600;
             padding: 2px 8px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-full);
         }
 
-        .tool-card .card-badge.live {
-            background: rgba(35, 134, 54, 0.15);
-            color: var(--accent-primary);
-            border: 1px solid rgba(35, 134, 54, 0.3);
+        .card-badge.live {
+            background: var(--accent-light);
+            color: var(--accent);
         }
 
-        .tool-card .card-badge.coming {
-            background: rgba(210, 153, 34, 0.15);
-            color: #d29922;
-            border: 1px solid rgba(210, 153, 34, 0.3);
-        }
-
-        .tool-card .card-badge.beta {
-            background: rgba(31, 111, 235, 0.15);
-            color: var(--accent-secondary);
-            border: 1px solid rgba(31, 111, 235, 0.3);
+        .card-badge.coming {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
         }
 
         .tool-card h3 {
             font-size: var(--font-md);
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-primary);
         }
 
         .tool-card p {
@@ -441,29 +305,16 @@
             flex: 1;
         }
 
-        .tool-card .card-footer {
+        .card-footer {
             margin-top: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: var(--font-xs);
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--accent);
             border-top: 1px solid var(--border-color);
             padding-top: 12px;
-        }
-
-        .tool-card:hover .card-footer {
-            color: var(--text-primary);
-        }
-
-        .tool-card .card-footer .arrow {
-            transition: transform var(--transition-fast);
-        }
-
-        .tool-card:hover .card-footer .arrow {
-            transform: translateX(4px);
-            color: var(--border-focus);
         }
 
         .tool-card.coming-soon {
@@ -474,12 +325,10 @@
         .tool-card.coming-soon:hover {
             transform: none;
             border-color: var(--border-color);
-            box-shadow: none;
+            background: var(--bg-primary);
         }
 
-        /* --------------------------------------------------------------------------
-           7. NO RESULTS STATE
-           -------------------------------------------------------------------------- */
+        /* No Results */
         .no-results {
             text-align: center;
             padding: 60px 20px;
@@ -492,12 +341,6 @@
 
         .no-results.visible {
             display: block;
-            animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .no-results .no-results-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
         }
 
         .no-results h3 {
@@ -510,42 +353,35 @@
             font-size: var(--font-sm);
         }
 
-        /* --------------------------------------------------------------------------
-           8. FOOTER
-           -------------------------------------------------------------------------- */
+        /* Footer */
         .footer {
             border-top: 1px solid var(--border-color);
-            padding: 48px 24px;
+            padding: 40px 24px;
             text-align: center;
             background: var(--bg-secondary);
         }
 
-        .footer .footer-content {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .footer .footer-brand {
+        .footer-brand {
             font-size: var(--font-md);
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--accent);
             letter-spacing: -0.3px;
         }
 
-        .footer .footer-text {
+        .footer-text {
             font-size: var(--font-sm);
             color: var(--text-secondary);
             margin-top: 4px;
         }
 
-        .footer .footer-divider {
+        .footer-divider {
             width: 40px;
             height: 1px;
             background: var(--border-color);
             margin: 20px auto;
         }
 
-        .footer .footer-social {
+        .footer-social {
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -553,74 +389,38 @@
             flex-wrap: wrap;
         }
 
-        .footer .footer-social a {
+        .footer-social a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: var(--font-sm);
-            transition: color var(--transition-fast);
+            transition: color var(--transition);
         }
 
-        .footer .footer-social a:hover {
-            color: var(--text-primary);
+        .footer-social a:hover {
+            color: var(--accent);
         }
 
-        .footer .footer-copy {
+        .footer-copy {
             font-size: var(--font-xs);
             color: var(--text-muted);
         }
 
-        .footer .footer-copy .heart {
-            color: var(--accent-danger);
-            display: inline-block;
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-
-        /* --------------------------------------------------------------------------
-           9. ANIMATIONS & RESPONSIVE DESIGN
-           -------------------------------------------------------------------------- */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            14% { transform: scale(1.2); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.2); }
-            70% { transform: scale(1); }
-        }
-
-        .tool-card:nth-child(1) { animation-delay: 0.05s; }
-        .tool-card:nth-child(2) { animation-delay: 0.1s; }
-        .tool-card:nth-child(3) { animation-delay: 0.15s; }
-        .tool-card:nth-child(4) { animation-delay: 0.2s; }
-
+        /* Responsive */
         @media (max-width: 768px) {
             :root {
-                --font-xxxl: 38px;
+                --font-xxxl: 34px;
             }
-            
+
             .navbar {
                 padding: 12px 20px;
             }
-            
+
             .hero {
                 padding: 120px 20px 30px;
             }
-            
+
             .tools-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .theme-toggle .toggle-label {
-                display: none;
             }
         }
 
@@ -629,7 +429,7 @@
                 padding: 100px 16px 24px;
             }
             .hero h1 {
-                font-size: 30px;
+                font-size: 28px;
             }
             .hero p {
                 font-size: var(--font-sm);
@@ -641,119 +441,79 @@
                 padding: 32px 16px;
             }
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <!-- ========================================
-    NAVBAR
-    ======================================== -->
-    <nav class="navbar" role="navigation">
+    <!-- Navbar -->
+    <nav class="navbar">
         <a href="/" class="navbar-brand">
-            <span class="logo-icon">🔐</span>
-            <span class="brand-text">AzazilCrypt</span>
-            <span class="brand-version">v2.0</span>
+            <span class="brand-text">SimpleThing</span>
+            <span class="brand-version">v1.0</span>
         </a>
-        <div class="navbar-actions">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <span id="themeIcon">🌙</span>
-                <span class="toggle-label" id="themeLabel">Dark</span>
-            </button>
-        </div>
     </nav>
 
-    <!-- ========================================
-    HERO
-    ======================================== -->
+    <!-- Hero -->
     <section class="hero">
-        <div class="badge">🚀 100% Offline • Web Crypto API</div>
+        <div class="badge">100% Gratis Bisa digunakan siapa aja kok</div>
         <h1>
-            Koleksi <span class="highlight">Tools</span><br>
-            Gratis & Aman
+            Beberapa <span class="highlight">Tools</span><br>
+            Gratis & Aman Dipakai
         </h1>
         <p>
-            Berbagai utility online yang berjalan sepenuhnya di browser Anda.
-            Tanpa server, tanpa tracking, tanpa biaya.
+            Website ini Masih dalam tahap beta (pengembangan oleh devnya),jadi maaf bila masih ada error/bug
         </p>
 
         <div class="search-container">
             <div class="search-box">
-                <span class="search-icon">🔍</span>
                 <input type="text" id="searchInput" placeholder="Cari tools..." aria-label="Cari tools">
-                <button class="search-clear" id="searchClear" aria-label="Hapus pencarian">✕</button>
+                <button class="search-clear" id="searchClear" aria-label="Hapus pencarian">X</button>
             </div>
         </div>
     </section>
 
-    <!-- ========================================
-    TOOLS GRID
-    ======================================== -->
+    <!-- Tools -->
     <section class="tools-section">
         <div class="section-header">
-            <h2>📦 Semua Tools</h2>
+            <h2>Semua Tools</h2>
             <span class="tool-count" id="toolCount">0 tools</span>
         </div>
 
-        <div class="tools-grid" id="toolsGrid">
-            <!-- Tools akan di-render oleh JavaScript -->
-        </div>
+        <div class="tools-grid" id="toolsGrid"></div>
 
         <div class="no-results" id="noResults">
-            <div class="no-results-icon">🔍</div>
             <h3>Tidak ditemukan</h3>
             <p>Coba gunakan kata kunci lain</p>
         </div>
     </section>
 
-    <!-- ========================================
-    FOOTER
-    ======================================== -->
+    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">AzazilCrypt</div>
-            <div class="footer-text">Tools Suite — Enkripsi & Dekripsi File Offline</div>
-            <div class="footer-divider"></div>
-            <div class="footer-social">
-                <a href="https://instagram.com/fadilmuhamadh" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://whatsapp.com/channel/0029Vb87FVfInlqRtOkpBJ1w" target="_blank" rel="noopener">WhatsApp Channel</a>
-                <a href="https://github.com/Xoanbotz" target="_blank" rel="noopener">GitHub</a>
-            </div>
-            <div class="footer-copy">
-                Dibuat dengan <span class="heart">❤️</span> oleh <strong>Azazil</strong> &bull;
-                <span id="year"></span> AzazilCrypt
-            </div>
+        <div class="footer-brand">SimpleThing</div>
+        <div class="footer-text">Tools Suite — Enkripsi & Dekripsi File Offline</div>
+        <div class="footer-divider"></div>
+        <div class="footer-social">
+            <a href="https://instagram.com/fadilmuhamadh" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://whatsapp.com/channel/0029VbD8d3ZBA1epBcTyRs04" target="_blank" rel="noopener">WhatsApp Channel</a>
+            <a href="https://github.com/Xoanbotz" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="footer-copy">
+            Dibuat oleh <strong>Adil</strong> &bull; <span id="year"></span> SimpleThing
         </div>
     </footer>
 
-    <!-- ========================================
-    JAVASCRIPT
-    ======================================== -->
     <script>
-        // ========================================
-        // DATA TOOLS
-        // ========================================
         const toolsData = [{
             id: 'encryptdecrypt',
             name: 'Encrypt & Decrypt',
-            icon: '🔐',
-            description: 'Base64.',
+            icon: 'AES',
+            description: 'Enkripsi & dekripsi file dengan AES-256-GCM. 100% offline.',
             category: 'security',
             url: 'tools/encryptdecrypt/',
             status: 'live',
             tags: ['enkripsi', 'dekripsi', 'keamanan', 'file', 'aes', 'gcm']
         }];
 
-        // ========================================
-        // RENDER TOOLS
-        // ========================================
         function renderTools(filter = '') {
             const grid = document.getElementById('toolsGrid');
             const noResults = document.getElementById('noResults');
@@ -786,9 +546,9 @@
 
             grid.innerHTML = filtered.map(tool => {
                 const statusBadge = {
-                    live: '<span class="card-badge live">● Live</span>',
-                    coming: '<span class="card-badge coming">● Coming Soon</span>',
-                    beta: '<span class="card-badge beta">● Beta</span>'
+                    live: '<span class="card-badge live">Live</span>',
+                    coming: '<span class="card-badge coming">Coming Soon</span>',
+                    beta: '<span class="card-badge live">Beta</span>'
                 } [tool.status] || '';
 
                 const isClickable = tool.status === 'live';
@@ -796,25 +556,22 @@
                 const href = isClickable ? tool.url : '#';
 
                 return `
-                        <a href="${href}" class="tool-card ${comingClass}" 
-                           ${!isClickable ? 'onclick="return false;"' : ''}
-                           data-tool="${tool.id}">
-                            ${statusBadge}
-                            <div class="card-icon">${tool.icon}</div>
-                            <h3>${tool.name}</h3>
-                            <p>${tool.description}</p>
-                            <div class="card-footer">
-                                ${isClickable ? 'Buka tool' : 'Segera hadir'}
-                                <span class="arrow">${isClickable ? '→' : '⏳'}</span>
-                            </div>
-                        </a>
-                    `;
+                    <a href="${href}" class="tool-card ${comingClass}"
+                       ${!isClickable ? 'onclick="return false;"' : ''}
+                       data-tool="${tool.id}">
+                        ${statusBadge}
+                        <div class="card-icon">${tool.icon}</div>
+                        <h3>${tool.name}</h3>
+                        <p>${tool.description}</p>
+                        <div class="card-footer">
+                            ${isClickable ? 'Buka tool' : 'Segera hadir'}
+                            <span>${isClickable ? '->' : '--'}</span>
+                        </div>
+                    </a>
+                `;
             }).join('');
         }
 
-        // ========================================
-        // SEARCH
-        // ========================================
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
 
@@ -841,51 +598,8 @@
             }
         });
 
-        // ========================================
-        // THEME
-        // ========================================
-        function getTheme() {
-            return localStorage.getItem('azazil-theme') || 'dark';
-        }
-
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('azazil-theme', theme);
-            updateThemeButton(theme);
-        }
-
-        function updateThemeButton(theme) {
-            const icon = document.getElementById('themeIcon');
-            const label = document.getElementById('themeLabel');
-            if (theme === 'dark') {
-                icon.textContent = '☀️';
-                label.textContent = 'Light';
-            } else {
-                icon.textContent = '🌙';
-                label.textContent = 'Dark';
-            }
-        }
-
-        function toggleTheme() {
-            const current = getTheme();
-            setTheme(current === 'dark' ? 'light' : 'dark');
-        }
-
-        const savedTheme = getTheme();
-        setTheme(savedTheme);
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        // ========================================
-        // INIT
-        // ========================================
         renderTools();
         document.getElementById('year').textContent = new Date().getFullYear();
-
-        console.log('🔐 AzazilCrypt v2.0 — Tools Suite');
-        console.log('💡 Shortcut: Ctrl+K untuk mencari');
-        console.log('📦 Total tools:', toolsData.length);
-        console.log('✅ Encrypt & Decrypt → tools/encryptdecrypt/');
     </script>
 
 </body>
