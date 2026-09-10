@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Source Code Copier</title>
-    <meta name="description" content="Ambil source code dari URL publik dengan mudah dan aman.">
+    <meta name="description" content="Ambil source code HTML, CSS, JavaScript, dan gambar dari URL publik dengan mudah dan aman.">
     <meta name="theme-color" content="#ffffff">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="stylesheet" href="css/style.css">
@@ -15,7 +15,7 @@
     <nav class="navbar">
         <a href="/" class="navbar-brand">
             <span class="brand-text">Source Code Copier</span>
-            <span class="brand-version">v1.0</span>
+            <span class="brand-version">v2.0</span>
         </a>
     </nav>
 
@@ -23,12 +23,12 @@
     <section class="hero">
         <div class="badge">100% Public Resource Only</div>
         <h1>
-            Lihat <span class="highlight">Source Code</span><br>
+            Ambil <span class="highlight">Source Code</span><br>
             dari Website Mana Pun
         </h1>
         <p>
-            Masukkan URL website publik, dan lihat source HTML-nya langsung di browser.
-            Tanpa login, tanpa bypass, tanpa tracking.
+            Masukkan URL website publik, pilih mau ambil HTML, CSS, JavaScript,
+            atau gambarnya. Tanpa login, tanpa bypass, tanpa tracking.
         </p>
 
         <!-- Input Section -->
@@ -44,6 +44,27 @@
                     Fetch Source
                 </button>
             </div>
+
+            <!-- Selector jenis asset -->
+            <div class="selector">
+                <label class="check-item">
+                    <input type="checkbox" id="checkHtml" checked>
+                    <span>HTML</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="checkCss" checked>
+                    <span>CSS</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="checkJs" checked>
+                    <span>JavaScript</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="checkImg">
+                    <span>Gambar</span>
+                </label>
+            </div>
+
             <p class="hint">
                 Hanya website dengan akses publik. Tool ini tidak mencoba melewati login,
                 CAPTCHA, paywall, atau firewall apa pun.
@@ -72,8 +93,9 @@
 
     <!-- ===================== RESULT ===================== -->
     <section class="result-section" id="resultSection">
+
         <div class="section-header">
-            <h2>Hasil Source Code</h2>
+            <h2>Hasil</h2>
             <div class="stats" id="statsBox">
                 <span class="stat"><strong id="statChars">0</strong> karakter</span>
                 <span class="stat"><strong id="statLines">0</strong> baris</span>
@@ -81,15 +103,68 @@
             </div>
         </div>
 
-        <div class="code-viewer" id="codeViewer">
-            <pre><code id="codeContent">// Source code akan muncul di sini...</code></pre>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="html">
+                HTML
+            </button>
+            <button class="tab-btn" data-tab="css">
+                CSS <span class="tab-count" id="countCss">0</span>
+            </button>
+            <button class="tab-btn" data-tab="js">
+                JavaScript <span class="tab-count" id="countJs">0</span>
+            </button>
+            <button class="tab-btn" data-tab="img">
+                Gambar <span class="tab-count" id="countImg">0</span>
+            </button>
         </div>
 
-        <div class="action-buttons">
-            <button id="copyBtn" class="btn-primary">Copy All</button>
-            <button id="downloadBtn" class="btn-secondary">Download .html</button>
+        <!-- ===================== TAB: HTML ===================== -->
+        <div class="tab-content active" id="tab-html">
+            <div class="code-viewer">
+                <pre><code id="codeHtml">// Source HTML akan muncul di sini...</code></pre>
+            </div>
+            <div class="action-buttons">
+                <button id="copyHtml" class="btn-primary">Copy HTML</button>
+                <button id="downloadHtml" class="btn-secondary">Download .html</button>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: CSS ===================== -->
+        <div class="tab-content" id="tab-css">
+            <div class="code-viewer">
+                <pre><code id="codeCss">// Source CSS akan muncul di sini...</code></pre>
+            </div>
+            <div class="action-buttons">
+                <button id="copyCss" class="btn-primary">Copy CSS</button>
+                <button id="downloadCss" class="btn-secondary">Download .css</button>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: JS ===================== -->
+        <div class="tab-content" id="tab-js">
+            <div class="code-viewer">
+                <pre><code id="codeJs">// Source JavaScript akan muncul di sini...</code></pre>
+            </div>
+            <div class="action-buttons">
+                <button id="copyJs" class="btn-primary">Copy JavaScript</button>
+                <button id="downloadJs" class="btn-secondary">Download .js</button>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: IMG ===================== -->
+        <div class="tab-content" id="tab-img">
+            <div class="image-grid" id="imageGrid">
+                <p class="empty-state">Belum ada gambar.</p>
+            </div>
+        </div>
+
+        <!-- ===================== GLOBAL ACTIONS ===================== -->
+        <div class="action-buttons global-actions">
+            <button id="downloadAll" class="btn-primary">Download Semua (.zip)</button>
             <button id="clearBtn" class="btn-ghost">Clear</button>
         </div>
+
     </section>
 
     <!-- ===================== FOOTER ===================== -->
@@ -102,6 +177,8 @@
         </div>
     </footer>
 
+    <!-- JSZip buat Download Semua (.zip) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

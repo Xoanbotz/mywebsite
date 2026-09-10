@@ -1,32 +1,26 @@
 /* ==========================================================================
    Netlify Function — /api/fetch
-   Proxy fetch HTML + inline CSS, JS, dan gambar.
+   Ambil HTML + asset (CSS, JS, gambar) secara TERPISAH.
    ========================================================================== */
 
 const axios = require('axios');
 
-const MAX_ASSETS = 30;         // batas jumlah asset yang di-fetch
-const ASSET_TIMEOUT = 8000;    // timeout per asset (ms)
-const MAX_ASSET_SIZE = 5 * 1024 * 1024; // 5 MB per asset
+const MAX_ASSETS = 30;
+const ASSET_TIMEOUT = 8000;
+const MAX_ASSET_SIZE = 5 * 1024 * 1024;
 
-/* --------------------------------------------------------------------------
-   Helper: ambil konten asset dengan aman
-   -------------------------------------------------------------------------- */
+/* Helper: fetch asset */
 async function fetchAsset(url) {
     try {
         const res = await axios.get(url, {
             timeout: ASSET_TIMEOUT,
             responseType: 'arraybuffer',
             maxRedirects: 5,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; SourceCodeCopier/1.0)'
-            },
+            headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SourceCodeCopier/1.0)' },
             validateStatus: () => true
         });
-
         if (res.status !== 200) return null;
         if (res.data.byteLength > MAX_ASSET_SIZE) return null;
-
         return {
             buffer: Buffer.from(res.data),
             contentType: res.headers['content-type'] || ''
@@ -36,89 +30,51 @@ async function fetchAsset(url) {
     }
 }
 
-/* --------------------------------------------------------------------------
-   Helper: inline CSS
-   -------------------------------------------------------------------------- */
-async function inlineCSS(html, baseUrl) {
-    const linkRegex = /<link\b[^>]*rel=["']stylesheet["'][^>]*>/gi;
-    const matches = html.match(linkRegex) || [];
-
-    for (const tag of matches.slice(0, MAX_ASSETS)) {
+/* Helper: ekstrak URL CSS dari HTML */
+function extractCSSUrls(html, baseUrl) {
+    const urls = new Set();
+    const regex = /<link\b[^>]*rel=["']stylesheet["'][^>]*>/gi;
+    const matches = html.match(regex) || [];
+    for (const tag of matches) {
         const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
         if (!hrefMatch) continue;
-
         const href = hrefMatch[1];
         if (href.startsWith('data:') || href.startsWith('blob:')) continue;
-
-        let cssUrl;
         try {
-            cssUrl = new URL(href, baseUrl).href;
-        } catch { continue; }
-
-        const asset = await fetchAsset(cssUrl);
-        if (!asset) continue;
-
-        const cssText = asset.buffer.toString('utf-8');
-        const styleTag = `<style data-inlined-from="${cssUrl}">\n${cssText}\n</style>`;
-        html = html.replace(tag, styleTag);
+            urls.add(new URL(href, baseUrl).href);
+        } catch { /* skip */ }
     }
-    return html;
+    return [...urls];
 }
 
-/* --------------------------------------------------------------------------
-   Helper: inline JS
-   -------------------------------------------------------------------------- */
-async function inlineJS(html, baseUrl) {
-    const scriptRegex = /<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>\s*<\/script>/gi;
-    const matches = [...html.matchAll(scriptRegex)];
-
-    for (const match of matches.slice(0, MAX_ASSETS)) {
-        const fullTag = match[0];
+/* Helper: ekstrak URL JS dari HTML */
+function extractJSUrls(html, baseUrl) {
+    const urls = new Set();
+    const regex = /<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+    let match;
+    while ((match = regex.exec(html)) !== null) {
         const src = match[1];
         if (src.startsWith('data:') || src.startsWith('blob:')) continue;
-
-        let jsUrl;
         try {
-            jsUrl = new URL(src, baseUrl).href;
-        } catch { continue; }
-
-        const asset = await fetchAsset(jsUrl);
-        if (!asset) continue;
-
-        const jsText = asset.buffer.toString('utf-8');
-        const scriptTag = `<script data-inlined-from="${jsUrl}">\n${jsText}\n</script>`;
-        html = html.replace(fullTag, scriptTag);
+            urls.add(new URL(src, baseUrl).href);
+        } catch { /* skip */ }
     }
-    return html;
+    return [...urls];
 }
 
-/* --------------------------------------------------------------------------
-   Helper: inline gambar
-   -------------------------------------------------------------------------- */
-async function inlineImages(html, baseUrl) {
-    const imgRegex = /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
-    const matches = [...html.matchAll(imgRegex)];
-
-    for (const match of matches.slice(0, MAX_ASSETS)) {
-        const fullTag = match[0];
+/* Helper: ekstrak URL gambar dari HTML */
+function extractImageUrls(html, baseUrl) {
+    const urls = new Set();
+    const regex = /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+    let match;
+    while ((match = regex.exec(html)) !== null) {
         const src = match[1];
         if (src.startsWith('data:') || src.startsWith('blob:')) continue;
-
-        let imgUrl;
         try {
-            imgUrl = new URL(src, baseUrl).href;
-        } catch { continue; }
-
-        const asset = await fetchAsset(imgUrl);
-        if (!asset) continue;
-
-        const base64 = asset.buffer.toString('base64');
-        const mime = asset.contentType || 'image/png';
-        const dataUri = `data:${mime};base64,${base64}`;
-
-        html = html.replace(fullTag, fullTag.replace(src, dataUri));
+            urls.add(new URL(src, baseUrl).href);
+        } catch { /* skip */ }
     }
-    return html;
+    return [...urls];
 }
 
 /* --------------------------------------------------------------------------
@@ -136,16 +92,7 @@ exports.handler = async (event) => {
         return { statusCode: 204, headers, body: '' };
     }
 
-    if (event.httpMethod !== 'GET') {
-        return {
-            statusCode: 405,
-            headers,
-            body: JSON.stringify({ success: false, error: 'Method not allowed.' })
-        };
-    }
-
     const { url } = event.queryStringParameters || {};
-
     if (!url) {
         return {
             statusCode: 400,
@@ -199,20 +146,32 @@ exports.handler = async (event) => {
             };
         }
 
-        let html = typeof response.data === 'string' ? response.data : String(response.data);
+        const html = typeof response.data === 'string' ? response.data : String(response.data);
         const baseUrl = parsedUrl.href;
 
-        /* Inline semua asset secara paralel */
-        const [cssDone, jsDone, imgDone] = await Promise.all([
-            inlineCSS(html, baseUrl),
-            inlineJS(html, baseUrl),
-            inlineImages(html, baseUrl)
-        ]);
+        /* Ekstrak semua URL asset */
+        const cssUrls = extractCSSUrls(html, baseUrl).slice(0, MAX_ASSETS);
+        const jsUrls = extractJSUrls(html, baseUrl).slice(0, MAX_ASSETS);
+        const imgUrls = extractImageUrls(html, baseUrl).slice(0, MAX_ASSETS);
 
-        /* CSS harus dijalanin dulu, baru JS & img pake hasil CSS */
-        html = cssDone;
-        html = await inlineJS(html, baseUrl);
-        html = await inlineImages(html, baseUrl);
+        /* Fetch semua asset secara paralel */
+        const [cssAssets, jsAssets, imgAssets] = await Promise.all([
+            Promise.all(cssUrls.map(async (u) => {
+                const asset = await fetchAsset(u);
+                return asset ? { url: u, content: asset.buffer.toString('utf-8') } : null;
+            })),
+            Promise.all(jsUrls.map(async (u) => {
+                const asset = await fetchAsset(u);
+                return asset ? { url: u, content: asset.buffer.toString('utf-8') } : null;
+            })),
+            Promise.all(imgUrls.map(async (u) => {
+                const asset = await fetchAsset(u);
+                if (!asset) return null;
+                const mime = asset.contentType || 'image/png';
+                const base64 = asset.buffer.toString('base64');
+                return { url: u, content: `data:${mime};base64,${base64}`, mime };
+            }))
+        ]);
 
         const elapsed = Date.now() - startTime;
 
@@ -224,9 +183,14 @@ exports.handler = async (event) => {
                 url: baseUrl,
                 status: response.status,
                 contentType,
-                source: html,
-                charCount: html.length,
-                lineCount: html.split(/\r?\n/).length,
+                html: {
+                    source: html,
+                    charCount: html.length,
+                    lineCount: html.split(/\r?\n/).length
+                },
+                css: cssAssets.filter(Boolean),
+                js: jsAssets.filter(Boolean),
+                images: imgAssets.filter(Boolean),
                 elapsedMs: elapsed
             })
         };
