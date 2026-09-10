@@ -3,10 +3,9 @@
    Proxy fetch ke URL publik, mengembalikan HTML source.
    ========================================================================== */
 
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 exports.handler = async (event) => {
-    /* CORS headers */
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -14,7 +13,6 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json'
     };
 
-    /* Handle preflight */
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 204, headers, body: '' };
     }
@@ -29,7 +27,6 @@ exports.handler = async (event) => {
 
     const { url } = event.queryStringParameters || {};
 
-    /* Validasi input */
     if (!url) {
         return {
             statusCode: 400,
@@ -38,7 +35,6 @@ exports.handler = async (event) => {
         };
     }
 
-    /* Validasi format URL */
     let parsedUrl;
     try {
         parsedUrl = new URL(url);
@@ -50,7 +46,6 @@ exports.handler = async (event) => {
         };
     }
 
-    /* Batasi http/https aja */
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
         return {
             statusCode: 400,
@@ -62,28 +57,18 @@ exports.handler = async (event) => {
     const startTime = Date.now();
 
     try {
-        const response = await fetch(parsedUrl.href, {
-            method: 'GET',
-            redirect: 'follow',
+        const response = await axios.get(parsedUrl.href, {
+            timeout: 15000,
+            responseType: 'text',
+            maxRedirects: 5,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (compatible; SourceCodeCopier/1.0)',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             },
-            timeout: 15000
+            validateStatus: () => true
         });
 
-        if (!response.ok) {
-            return {
-                statusCode: response.status,
-                headers,
-                body: JSON.stringify({
-                    success: false,
-                    error: `Website mengembalikan status ${response.status} ${response.statusText}.`
-                })
-            };
-        }
-
-        const contentType = response.headers.get('content-type') || '';
+        const contentType = response.headers['content-type'] || '';
         if (!contentType.includes('text') && !contentType.includes('html') && !contentType.includes('xml')) {
             return {
                 statusCode: 415,
@@ -95,7 +80,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const html = await response.text();
+        const html = typeof response.data === 'string' ? response.data : String(response.data);
         const elapsed = Date.now() - startTime;
 
         return {
@@ -116,7 +101,7 @@ exports.handler = async (event) => {
     } catch (err) {
         const elapsed = Date.now() - startTime;
 
-        if (err.name === 'AbortError' || err.type === 'request-timeout') {
+        if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
             return {
                 statusCode: 504,
                 headers,
