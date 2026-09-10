@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SimpleThing - Tools Suite</title>
-    <meta name="description" content="Koleksi tools online gratis & aman — Enkripsi, Dekripsi, dan berbagai utility lainnya.">
+    <meta name="description" content="Koleksi tools online gratis & aman — Enkripsi, Dekripsi, Source Code Copier, dan berbagai utility lainnya.">
     <meta name="theme-color" content="#ffffff">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
@@ -461,7 +461,7 @@
             Gratis & Aman Dipakai
         </h1>
         <p>
-            Website ini Masih dalam tahap beta (pengembangan oleh devnya),jadi maaf bila masih ada error/bug
+            Website ini Masih dalam tahap beta (pengembangan oleh devnya), jadi maaf bila masih ada error/bug
         </p>
 
         <div class="search-container">
@@ -490,7 +490,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-brand">SimpleThing</div>
-        <div class="footer-text">Tools Suite — Enkripsi & Dekripsi File Offline</div>
+        <div class="footer-text">Tools Suite — Enkripsi, Dekripsi & Source Code Copier</div>
         <div class="footer-divider"></div>
         <div class="footer-social">
             <a href="https://instagram.com/fadilmuhamadh" target="_blank" rel="noopener">Instagram</a>
@@ -503,16 +503,28 @@
     </footer>
 
     <script>
-        const toolsData = [{
-            id: 'encryptdecrypt',
-            name: 'Encrypt & Decrypt',
-            icon: 'AES',
-            description: 'Enkripsi & dekripsi file dengan AES-256-GCM. 100% offline.',
-            category: 'security',
-            url: 'tools/encryptdecrypt/',
-            status: 'live',
-            tags: ['enkripsi', 'dekripsi', 'keamanan', 'file', 'aes', 'gcm']
-        }];
+        const toolsData = [
+            {
+                id: 'encryptdecrypt',
+                name: 'Encrypt & Decrypt',
+                icon: 'AES',
+                description: 'Enkripsi & dekripsi file dengan AES-256-GCM.',
+                category: 'security',
+                url: 'tools/encryptdecrypt/',
+                status: 'live',
+                tags: ['enkripsi', 'dekripsi', 'keamanan', 'file', 'aes', 'gcm']
+            },
+            {
+                id: 'sourcecopier',
+                name: 'Source Code Copier',
+                icon: 'SRC',
+                description: 'Ambil source code HTML dari website publik dengan mudah.',
+                category: 'utility',
+                url: 'tools/source-code-copier/',
+                status: 'live',
+                tags: ['source', 'code', 'html', 'viewer', 'copier', 'website', 'url']
+            }
+        ];
 
         function renderTools(filter = '') {
             const grid = document.getElementById('toolsGrid');

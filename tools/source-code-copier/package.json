@@ -1,0 +1,13 @@
+{
+  "name": "simplething",
+  "version": "1.0.0",
+  "description": "SimpleThing — Koleksi tools online gratis & aman.",
+  "author": "Adil",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
