@@ -1,1 +1,1 @@
-simplething.netlify
+justwebsit.netlify
